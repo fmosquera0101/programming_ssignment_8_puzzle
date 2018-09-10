@@ -15,10 +15,10 @@ public class Board {
 	}
 
 	private int[][] copy(int[][] blocks) {
-		int n = this.blocks.length;
+		int n = blocks.length;
 		int[][] copy = new int[n][n];
-		for (int i = 0; i < blocks.length; i++) {
-			for (int j = 0; j < blocks.length; j++) {
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < n; j++) {
 				copy[i][j] = blocks[i][j];
 			}
 		}
@@ -32,9 +32,10 @@ public class Board {
 	//number of blocks out of place
 	public int hamming(){
 		int counter = 0;
-		for (int i = 0; i < blocks.length; i++) {
-			for (int j = 0; j < blocks.length; j++) {
-				if(blocks[i][j] == 0 && blocks[i][j] != (i * dimension() + j + 1)){
+		int n = blocks.length;
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < n; j++) {
+				if(blocks[i][j] != 0 && blocks[i][j] != (i * dimension() + j + 1)){
 					counter++;
 				}
 			}
@@ -44,12 +45,14 @@ public class Board {
 	// sum of Manhattan distances between blocks and goal
 	public int manhattan(){
 		int distance = 0;
-		for (int i = 0; i < blocks.length; i++) {
-			for (int j = 0; j < blocks.length; j++) {
-				if(blocks[i][j] == 0){
+		int n = blocks.length;
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < n; j++) {
+				int block = blocks[i][j];
+				if(block == 0){
 					distance += 0;
 				}else{
-					distance += Math.abs(i - ((blocks[i][j] - 1) / dimension())) -  Math.abs(j - ((blocks[i][j] - 1) % dimension()));
+					distance += Math.abs(i - ((block - 1) /dimension())) +  Math.abs(j - ((block - 1) % dimension()));
 				}
 			}
 		}
@@ -57,9 +60,10 @@ public class Board {
 	}
 	//is this board the goal board?
 	public boolean isGoal(){
-		for (int i = 0; i < blocks.length; i++) {
-			for (int j = 0; j < blocks.length; j++) {
-				if(blocks[i][j] == 0 && blocks[i][j] != (i * dimension() + j + 1)){
+		int n = blocks.length;
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < n; j++) {
+				if(blocks[i][j] != 0 && blocks[i][j] != (i * dimension() + j + 1)){
 					return false;
 				}
 			}
@@ -69,8 +73,9 @@ public class Board {
 	}
 	//a board that is obtained by exchanging any pair of blocks
 	public Board twin() {
-		for (int i = 0; i < blocks.length; i++) {
-			for (int j = 0; j < blocks.length - 1; j++) {
+		int n = blocks.length;
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < n - 1; j++) {
 				if(blocks[i][j] != 0 && blocks[i][j + 1] != 0){
 					return new Board(swap(i, j, i, j + 1));
 				}
@@ -94,9 +99,10 @@ public class Board {
 		if(null == y || !(y instanceof Board) || ((Board)y).blocks.length !=  blocks.length){
 			return false;
 		}
-
-		for (int i = 0; i < blocks.length; i++) {
-			for (int j = 0; j < blocks.length - 1; j++) {
+		
+		int n = blocks.length;
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < n; j++) {
 				if(((Board)y).blocks[i][j] !=  blocks[i][j]){
 					return false;
 				}
@@ -126,12 +132,13 @@ public class Board {
 		if(j < dimension() - 1){
 			linkedListNeighbors.add(new Board(swap(i, j, i , j + 1)));
 		}
-		return null;
+		return linkedListNeighbors;
 	}
 	private int[] oneDimArray() {
 		int [] oneDimArr = null;
-		for (int i = 0; i < blocks.length; i++) {
-			for (int j = 0; j < blocks.length; j++) {
+		int n = blocks.length;
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < n; j++) {
 				if(blocks[i][j] == 0){
 					oneDimArr = new int [2];
 					oneDimArr[0] = i;
